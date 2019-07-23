@@ -1,0 +1,11 @@
+{% if multiple %}
+	<div class="custom-control custom-checkbox">
+		<input type="checkbox" id="task_{{ task.id }}" name="{{ name }}[]" value="{{ task.id }}" class="custom-control-input">
+		{{ include('home/_task_label.twig', {task:task}) }}
+	</div>
+{% else %}
+	<div class="custom-control custom-radio">
+		<input type="radio" id="task_{{ task.id }}" name="{{ name }}" value="{{ task.id }}" class="custom-control-input">
+		{{ include('home/_task_label.twig', {task:task}) }}
+	</div>
+{% endif %}

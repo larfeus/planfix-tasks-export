@@ -1,0 +1,5 @@
+{% if tasks %}
+	{% for item in tasks %}
+		{{ include('home/_task.twig', {task:item, name:name, last:loop.last, multiple:multiple}) }}
+	{% endfor %}
+{% endif %}

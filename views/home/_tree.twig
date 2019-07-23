@@ -1,0 +1,8 @@
+<div class="my-2">
+	<input type="text" class="form-control" task-search="tc_{{ name }}" placeholder="Поиск по наименованию задачи" />
+</div>
+<div class="mt-2 mb-4" task-container="tc_{{ name }}">
+	{% for task in task_tree %}
+		{{ include('home/_task.twig', {tasks:task_tree, name:name, last:loop.last, multiple:multiple}) }}
+	{% endfor %}
+</div>

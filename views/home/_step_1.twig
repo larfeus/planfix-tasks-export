@@ -1,0 +1,53 @@
+{% if project %}
+
+	<input type="hidden" name="project_id" value="{{ project.id }}" />
+	<input type="hidden" name="year" value="{{ year }}" />
+	<input type="hidden" name="month" value="{{ month }}" />
+	<h4>Выбран проект:</h4>
+	<div class="form-row">
+		<div class="form-group col-auto">
+			<div class="form-control-plaintext">
+				{{ project.title }}, Отчетный период: {{ '%02d'|format(month) }}.{{ year }}
+			</div>
+		</div>
+	</div>
+
+	{% include 'home/_step_2.twig' %}
+
+{% else %}
+	<h4>Выберите проект:</h4>
+	{% if project_list %}
+		<div class="form-row">
+			<div class="form-group col-auto">
+				<select name="project_id" class="form-control select2">
+					{% for item in project_list %}
+						<option value="{{ item.id }}">{{ item.title }}</option>
+					{% endfor %}
+				</select>
+			</div>
+		</div>
+	{% else %}
+		<p class="text-muted my-2">К сожалению, не удалось получить список проектов.<br/>Попробуйте снова.</p>
+	{% endif %}
+	<div class="form-row">
+		<div class="form-group col-auto">
+			<label>Год</label>
+			<select name="year" class="form-control">
+				{% for item in year_list %}
+					<option value="{{ item }}" {{ item == year ? 'selected' : '' }}>{{ item }}</option>
+				{% endfor %}
+			</select>
+		</div>
+	</div>
+	<div class="form-row">
+		<div class="form-group col-auto">
+			<label>Месяц</label>
+			<select name="month" class="form-control">
+				{% for key, item in month_list %}
+					<option value="{{ key }}" {{ key == month ? 'selected' : '' }}>{{ item }}</option>
+				{% endfor %}
+			</select>
+		</div>
+	</div>
+	<button type="submit" class="btn btn-primary">Далее</button>
+{% endif %}

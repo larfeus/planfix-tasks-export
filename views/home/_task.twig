@@ -1,0 +1,12 @@
+{% if task %}
+	<div class="form-group pl-2 mb-0 border-left border-bottom" task-item>
+		<div class="form-control-plaintext form-control-sm">
+			{{ include('home/_task_control.twig', {task:task, multiple:multiple}) }}
+		</div>
+	</div>
+	{% if task.tasks %}
+	<div class="pl-5 collapse {{ last ? '' : 'border-left' }}" id="collapse_{{ task.id }}" task-collapse>
+		{{ include('home/_tasks.twig', {tasks:task.tasks, name:name, multiple:multiple}) }}
+	</div>
+	{% endif %}
+{% endif %}

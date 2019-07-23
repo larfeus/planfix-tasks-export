@@ -1,0 +1,19 @@
+{% extends 'layouts/page.twig' %}
+
+{% block content %}
+
+	{% if flash.hasMessage('message') %}
+		<div class="alert alert-success" role="alert">
+			{{ flash.getFirstMessage('message') }}
+		</div>
+	{% endif %}
+
+	<p>Отчет сгенерирован: {{ reportFile.getCreatedAt() }}</p>
+	<p><a href="{{ reportDownloadUrl }}" target="_blank">Скачать</a></p>
+
+	<form method="get" action="{{ reportUploadUrl }}">
+		<button type="submit" class="btn btn-large btn-primary">Загрузить в GoogleDrive</button>
+		<a href="{{ path_for('home') }}" class="btn btn-primary">В начало</a>
+	</form>
+
+{% endblock %}

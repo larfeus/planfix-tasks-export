@@ -1,0 +1,8 @@
+{% extends 'layouts/page.twig' %}
+
+{% block content %}
+	<form method="post">
+		<div class="alert alert-warning">Данное действие приведет к полному сбросу кеша сессии<br/>и, соответственно, выходу пользователя из системы.</div>
+		<button type="submit" class="btn btn-large btn-primary">Сбросить кеш</button>
+	</form>
+{% endblock %}

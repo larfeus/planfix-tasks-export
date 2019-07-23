@@ -1,0 +1,112 @@
+html,
+body {
+    height: 100%;
+}
+
+.page-login {
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-align: center;
+    align-items: center;
+    padding-top: 40px;
+    padding-bottom: 40px;
+    background-color: #f5f5f5;
+}
+
+.form-signin {
+    width: 100%;
+    max-width: 330px;
+    padding: 15px;
+    margin: auto;
+}
+.form-signin .form-control {
+    position: relative;
+    box-sizing: border-box;
+    height: auto;
+    padding: 10px;
+    font-size: 16px;
+}
+.form-signin .form-control:focus {
+    z-index: 2;
+}
+.form-signin input[type="text"] {
+    margin-bottom: -1px;
+    border-bottom-right-radius: 0;
+    border-bottom-left-radius: 0;
+}
+.form-signin input[type="password"] {
+    margin-bottom: 10px;
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+}
+
+.page {
+  padding-top: 5rem;
+}
+.page main {
+  text-align: left;
+}
+
+.select2-container .select2-selection--single {
+    display: block;
+    width: 100%;
+    height: calc(1.5em + .75rem + 2px);
+    padding: .375rem .75rem;
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.5;
+    color: #495057;
+    background-color: #fff;
+    background-clip: padding-box;
+    border: 1px solid #ced4da;
+    border-radius: .25rem;
+    transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+}
+.select2-container .select2-selection--single:focus {
+    color: #495057;
+    background-color: #fff;
+    border-color: #80bdff;
+    outline: 0;
+    box-shadow: 0 0 0 0.2rem rgba(0,123,255,.25);
+}
+.select2-container .select2-selection--single .select2-selection__rendered {
+    line-height: auto;
+    padding-left: 0;
+    padding-right: 0;
+    color: #495057;
+}
+.select2-container .select2-selection--single .select2-selection__arrow {
+    height: 2.1rem;
+}
+.select2-container .select2-selection--single .select2-selection__arrow b {
+    border-color: #495057 transparent transparent transparent;
+    border-width: 6px 3px 0 3px;
+}
+
+[data-toggle="collapse"] {
+    position: relative;
+    text-decoration: none!important;
+    padding-left: 10px;
+}
+[data-toggle="collapse"]:before {
+    border-style: solid;
+    height: 0;
+    width: 0;
+    position: absolute;
+    top: 50%;
+    content: '';
+}
+[data-toggle="collapse"][aria-expanded="false"]:before {
+    border-color: transparent transparent transparent #495057;
+    border-width: 3px 0 3px 6px;
+    left: 1px;
+    margin-top: -2px;
+    margin-left: -2px;
+}
+[data-toggle="collapse"][aria-expanded="true"]:before {
+    border-color: #495057 transparent transparent transparent;
+    border-width: 6px 3px 0 3px;
+    left: 2px;
+    margin-left: -4px;
+    margin-top: -2px;
+}

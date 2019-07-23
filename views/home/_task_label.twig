@@ -1,0 +1,9 @@
+<label class="custom-control-label" for="task_{{ task.id }}">
+	{% if task.tasks %}
+		<a href="#collapse_{{ task.id }}" data-toggle="collapse" role="button" aria-expanded="false">
+			{{ task.title }}
+		</a>
+	{% else %}
+		{{ task.title }}
+	{% endif %}
+</label>
