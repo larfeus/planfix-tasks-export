@@ -93,7 +93,7 @@ class Task extends Entity
 		if ($this->customData) {
 			foreach ($this->customData as $item) {
 				if ($item->field['id'] == $id) {
-					return is_string($item->value) ? strip_tags($item->value) : '';
+					return is_string($item->value) ? $item->value : '';
 				}
 			}
 		}

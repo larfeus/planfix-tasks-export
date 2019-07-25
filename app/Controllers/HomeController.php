@@ -81,6 +81,7 @@ class HomeController extends Controller
 			${"{$attribute}_tasks"} = array_filter($task_list ? $task_list->all() : [], function($task) use ($selected) {
 				return in_array($task->id, $selected);
 			});
+			${"{$attribute}_tasks"} = array_values(${"{$attribute}_tasks"});
 			$variable = "{$attribute}_columns";
 			$$variable = ($$variable = $request->getParam($variable))
 				? (array)$$variable : [];

@@ -235,3 +235,16 @@ if (!function_exists('base64urldecode')) {
         return base64_decode(strtr($str, '-_,', '+/='));
     }
 }
+
+if (!function_exists('br2nl')) {
+    /**
+     * Convert <br> tags to new line
+     * 
+     * @param string $str
+     * @return string
+     */
+    function br2nl($str)
+    {
+        return preg_replace('/\<br\s*\/?\>/i', "\r\n", $str);
+    }
+}

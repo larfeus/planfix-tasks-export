@@ -124,6 +124,11 @@ class Report
 	protected function terminal(array $tasks)
 	{
 		return array_filter($tasks, function($task) {
+
+			if (preg_match('/^\d+\s+неделя\:?$/i', trim($task->title))) {
+				return false;
+			}
+
 			return count($task->tasks) == 0;
 		});
 	}
@@ -135,6 +140,8 @@ class Report
 	{
 		$phpword = new \PhpOffice\PhpWord\PhpWord();
 		$section = $phpword->addSection();
+
+		\PhpOffice\PhpWord\Settings::setOutputEscapingEnabled(true);
 
 		// Стили
 		$primaryFontStyle = [
@@ -191,7 +198,7 @@ class Report
 		if (in_array(self::TASK_AUDIT, $this->next_additional)) {
 			$text = implode(', ',
 				array_map(function($task) {
-					return $task->getResultOfAudit();
+					return $this->decodeEntities($task->getResultOfAudit());
 				}, $this->next_tasks)
 			);
 			$text = sprintf('План подготовлен с учетом данных аудита: %s', $text);
@@ -222,12 +229,28 @@ class Report
 		$section->addText('Заключение:', $secondaryFontStyle);
 		$text = implode('. ',
 			array_map(function($task) {
-				return $task->getConclusion();
+				return $this->decodeEntities($task->getConclusion());
 			}, $this->current_tasks)
 		);
 		$section->addText($text, $textFontStyle);
 
 		$this->phpword = $phpword;
+	}
+
+	/**
+	 * Преобразование HTML сущностей
+	 * 
+	 * @param string $value 
+	 * @return string
+	 */
+	private function decodeEntities($value)
+	{
+		$value = html_entity_decode($value);
+		$value = br2nl($value);
+		$value = preg_replace('/(\S)(https?\:\/\/)/i', "\$1\r\n\$2", $value);
+		$value = strip_tags($value);
+
+		return $value;
 	}
 
 	/**
@@ -241,10 +264,10 @@ class Report
 	{
 		switch ($column) {
 			case self::TASK_TITLE:
-				return $task->title;
+				return $this->decodeEntities($task->title);
 				break;
 			case self::TASK_COMMENT:
-				return $task->getResultOfProcessing();
+				return $this->decodeEntities($task->getResultOfProcessing());
 				break;
 			case self::TASK_STORY:
 				return $task->getStoryPoints();
@@ -278,6 +301,18 @@ class Report
 	private function getTableData(array $tasks, array $columns)
 	{
 		$taskColumns = $this->getTableColumns($columns);
+		
+		foreach ($taskColumns as $column => $title) {
+			if (count($taskColumns) > 1 && isset($taskColumns[self::TASK_COMMENT])) {
+				$width = $column == self::TASK_COMMENT ? 50 : (50 / (count($taskColumns) - 1));
+			} else {
+				$width = 100 / count($taskColumns);
+			}
+			$taskColumns[$column] = [
+				'width' => $width,
+				'value' => $title,
+			];
+		}
 
 		$data = [array_values($taskColumns)];
 
@@ -286,8 +321,11 @@ class Report
 		);
 		
 		foreach ($tasks as $task) {
-			$data[] = array_map(function($column) use ($task) {
-				return $this->getTableValue($task, $column);
+			$data[] = array_map(function($column) use ($task, $taskColumns) {
+				return [
+					'width' => $taskColumns[$column]['width'],
+					'value' => $this->getTableValue($task, $column),
+				];
 			}, array_keys($taskColumns));
 		}
 
@@ -338,6 +376,7 @@ class Report
 			'cellSpacing ' => 100,
 			'spacing' => 0,
 			'width' => 100,
+			'layout' => \PhpOffice\PhpWord\Style\Table::LAYOUT_FIXED,
 		];
 
 		$cellStyleDefault = [
@@ -364,6 +403,7 @@ class Report
 				}
 
 				$cellWidth = 100 / count($cells);
+				
 				$cellStyle = $cellStyleDefault;
 				$cellFontStyle = $cellFontStyleDefault;
 				$cellParagraphStyle = $cellParagraphStyleDefault;
@@ -387,6 +427,7 @@ class Report
 				}
 
 				$cellWidth = 100 * $cellWidth;
+				$cellWidth = (int)$cellWidth;
 
 				$cell = $row->addCell($cellWidth, $cellStyle);
 				$cell->addText($cellValue, $cellFontStyle, $cellParagraphStyle);
