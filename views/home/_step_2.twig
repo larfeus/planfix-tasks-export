@@ -1,4 +1,4 @@
-{% if current_tasks|length > 0 %}
+{% if step > 2 %}
 
 	<h4>План за текущий месяц:</h4>
 	<div class="form-row">
@@ -31,6 +31,7 @@
 
 {% else %}
 
+	<input type="hidden" name="step" value="3" />
 	{% if task_tree %}
 		<h4>Выберите задачи за текущий месяц:</h4>
 		{{ include('home/_tree.twig', {task_tree:task_tree, name:'current_task_id', multiple:true}) }}

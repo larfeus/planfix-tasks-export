@@ -215,7 +215,7 @@ class GoogleDriveService extends Service
 				'data' => $content,
 				'mimeType' => $mimeType,
 				'uploadType' => 'multipart',
-				'fields' => 'id',
+				'fields' => 'id, name, parents, fileExtension, mimeType, size, trashed, webViewLink',
 			]
 		);
 	}
@@ -244,7 +244,7 @@ class GoogleDriveService extends Service
 
 		$settings = [
 			'q' => ['trashed != true'],
-		  	'fields' => 'nextPageToken, files(id, name, parents, fileExtension, mimeType, size)'
+		  	'fields' => 'nextPageToken, files(id, name, parents, fileExtension, mimeType, size, trashed, webViewLink)'
 		];
 
 		foreach ($options as $key => $value) {

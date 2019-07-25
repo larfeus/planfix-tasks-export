@@ -184,7 +184,7 @@ class Report
 		$this->addTable($section, $data);
 
 		// Ремарка
-		if (array_intersect_key($this->additional, array_fill_keys($this->next_additional, true))) {
+		if (count($this->next_additional) > 0) {
 			$section->addTextBreak();
 		}
 
@@ -209,14 +209,16 @@ class Report
 		}
 
 		// Открытые вопросы по проекту
-		$section->addTextBreak();
-		$section->addText('Открытые вопросы по проекту:', $secondaryFontStyle);
-		$section->addTextBreak();
-		$data = $this->getTableData($this->question_tasks, $this->question_columns);
-		$this->addTable($section, $data);
-		$section->addTextBreak();
+		if (count($this->question_tasks) > 0) {
+			$section->addTextBreak();
+			$section->addText('Открытые вопросы по проекту:', $secondaryFontStyle);
+			$section->addTextBreak();
+			$data = $this->getTableData($this->question_tasks, $this->question_columns);
+			$this->addTable($section, $data);
+		}
 		
 		// Заключение
+		$section->addTextBreak();
 		$section->addText('Заключение:', $secondaryFontStyle);
 		$text = implode('. ',
 			array_map(function($task) {

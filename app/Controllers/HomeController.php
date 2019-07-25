@@ -52,6 +52,8 @@ class HomeController extends Controller
 		$request = $this->getRequest();
 		$planfix = $this->getService('planfix');
 
+		$step = $request->getParam('step', 1);
+
 		// отчет
 		$report = new Report();
 		$report_columns = $report->columns;
@@ -73,24 +75,57 @@ class HomeController extends Controller
 
 		// выбор задач
 		foreach (['current', 'next', 'question'] as $attribute) {
-			$selected = (array)$request->getParam("{$attribute}_task_id", []);
+			$variable = "{$attribute}_task_id";
+			$selected = (array)$request->getParam($variable, []);
+			$$variable = $selected;
 			${"{$attribute}_tasks"} = array_filter($task_list ? $task_list->all() : [], function($task) use ($selected) {
 				return in_array($task->id, $selected);
 			});
 			$variable = "{$attribute}_columns";
-			$$variable =  ($$variable = $request->getParam($variable))
-				? (array)$$variable : $report->{$variable};
+			$$variable = ($$variable = $request->getParam($variable))
+				? (array)$$variable : [];
 		}
 
-		$next_task = array_shift($next_tasks);
+		$next_task = count($next_tasks) > 0 ? $next_tasks[0] : null;
 
 		// выбор дополнительной информации
-		$next_additional = (array)$request->getParam('next_additional') ? : $report->next_additional;
+		$next_additional = (array)$request->getParam('next_additional', []);
 		
 		// прочие списки
 		$project_list = $planfix->getProjectList();
 		$year_list = $this->getYearList();
 		$month_list = $this->getMonthList();
+
+		// проверка заполнения шагов
+		
+		if ($step > 4) {
+			// noop
+		} else {
+			$question_columns = $report->question_columns;
+		}
+
+		if ($step > 3) {
+			if (count($next_tasks) == 0 || count($next_columns) == 0) {
+				$step = 3;
+			}
+		} else {
+			$next_columns = $report->next_columns;
+			$next_additional = $report->next_additional;
+		}
+
+		if ($step > 2) {
+			if (count($current_tasks) == 0 || count($current_columns) == 0) {
+				$step = 2;
+			}
+		} else {
+			$current_columns = $report->current_columns;
+		}
+
+		if ($step > 1) {
+			if (!$project || !$year || !$month) {
+				$step = 1;
+			}
+		}
 
 		// Запуск процесса генерации отчета
 		if ($request->getParam('generate')) {
@@ -100,7 +135,7 @@ class HomeController extends Controller
 			$report->year = $year;
 			$report->current_tasks = $current_tasks;
 			$report->current_columns = $current_columns;
-			$report->next_tasks = [$next_task];
+			$report->next_tasks = $next_tasks;
 			$report->next_columns = $next_columns;
 			$report->next_additional = $next_additional;
 			$report->question_tasks = $question_tasks;
@@ -111,6 +146,7 @@ class HomeController extends Controller
 
 		return $this->render('home/index.twig',
 			compact([
+				'step',
 				'project',
 				'project_list',
 				'year',
@@ -118,11 +154,15 @@ class HomeController extends Controller
 				'month',
 				'month_list',
 				'current_tasks',
+				'current_task_id',
 				'current_columns',
 				'next_task',
+				'next_tasks',
+				'next_task_id',
 				'next_columns',
 				'next_additional',
 				'question_tasks',
+				'question_task_id',
 				'question_columns',
 				'task_list',
 				'task_tree',

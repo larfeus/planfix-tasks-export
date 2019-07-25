@@ -1,36 +1,49 @@
-{% if question_tasks|length > 0 %}
+{% if step > 4 %}
 
 	<h4>Задачи с текучкой (актуальными вопросами):</h4>
-	<div class="form-row">
-		<div class="form-group col-auto m-0">
-			<div class="form-control-plaintext">
-				Выбраны столбцы: [
-				{% for key, value in report_columns %}
-					{% if key in question_columns %}
-						"{{ value }}" <input type="hidden" name="question_columns[]" value="{{ key }}" />
-					{% endif %}
-				{% endfor %}
-				]
+	{% if question_tasks|length > 0 %}
+		<div class="form-row">
+			<div class="form-group col-auto m-0">
+				<div class="form-control-plaintext">
+					Выбраны столбцы: [
+					{% for key, value in report_columns %}
+						{% if key in question_columns %}
+							"{{ value }}" <input type="hidden" name="question_columns[]" value="{{ key }}" />
+						{% endif %}
+					{% endfor %}
+					]
+				</div>
 			</div>
 		</div>
-	</div>
-	<div class="form-row">
-		<div class="form-group col-auto">
-			<div class="form-control-plaintext">
-				{% for task in question_tasks %}
-					<div class="my-1">
-						<input type="hidden" name="question_task_id[]" value="{{ task.id }}" />
-						{{ task.title }}
-					</div>
-				{% endfor %}
+		<div class="form-row">
+			<div class="form-group col-auto">
+				<div class="form-control-plaintext">
+					{% for task in question_tasks %}
+						<div class="my-1">
+							<input type="hidden" name="question_task_id[]" value="{{ task.id }}" />
+							{{ task.title }}
+						</div>
+					{% endfor %}
+				</div>
 			</div>
 		</div>
-	</div>
+	{% else %}
+		<div class="form-row">
+			<div class="form-group col-auto">
+				<div class="form-control-plaintext">
+					Не заданы
+				</div>
+			</div>
+		</div>
+	{% endif %}
 
+	<input type="hidden" name="step" value="5" />
 	<button type="submit" name="generate" value="yes" class="btn btn-primary">Сгенерировать отчет</button>
+	<a href="{{ path_for(currentRoute, [], {project_id:project.id, current_task_id:current_task_id, current_columns:current_columns, next_task_id:next_task_id, next_columns:next_columns, next_additional:next_additional, year:year, month:month, step:4}) }}" class="btn btn-primary">Назад</a>
 
 {% else %}
 
+	<input type="hidden" name="step" value="5" />
 	{% if task_tree %}
 		<h4>Выберите задачи с текучкой (актуальными вопросами):</h4>
 		{{ include('home/_tree.twig', {task_tree:task_tree, name:'question_task_id', multiple:true}) }}
@@ -43,5 +56,5 @@
 		<p class="text-muted my-2">К сожалению, не удалось найти задачи в данном проекте.<br/>Попробуйте снова.</p>
 	{% endif %}
 	
-	<a href="{{ path_for(currentRoute, [], {project_id:project.id, current_tasks:current_tasks, current_columns:current_columns, year:year, month:month}) }}" class="btn btn-primary">Назад</a>
+	<a href="{{ path_for(currentRoute, [], {project_id:project.id, current_task_id:current_task_id, current_columns:current_columns, year:year, month:month, step:3}) }}" class="btn btn-primary">Назад</a>
 {% endif %}

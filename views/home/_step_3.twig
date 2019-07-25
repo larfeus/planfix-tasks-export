@@ -1,5 +1,4 @@
-<input type="hidden" name="next_additional[]" value="0" />
-{% if next_task %}
+{% if step > 3 %}
 
 	<input type="hidden" name="next_task_id" value="{{ next_task.id }}" />
 	<h4>План за следующий месяц:</h4>
@@ -16,7 +15,7 @@
 			</div>
 		</div>
 	</div>
-	{% if next_additional|length > 1 %}
+	{% if next_additional|length > 0 %}
 		<div class="form-row">
 			<div class="form-group col-auto m-0">
 				<div class="form-control-plaintext">
@@ -43,6 +42,7 @@
 
 {% else %}
 
+	<input type="hidden" name="step" value="4" />
 	{% if task_tree %}
 		<h4>Выберите план за следующий месяц:</h4>
 		{{ include('home/_tree.twig', {task_tree:task_tree, name:'next_task_id', multiple:false}) }}
@@ -69,5 +69,5 @@
 		<p class="text-muted my-2">К сожалению, не удалось найти задачи в данном проекте.<br/>Попробуйте снова.</p>
 	{% endif %}
 	
-	<a href="{{ path_for(currentRoute, [], {project_id:project.id, year:year, month:month}) }}" class="btn btn-primary">Назад</a>
+	<a href="{{ path_for(currentRoute, [], {project_id:project.id, year:year, month:month, step:2}) }}" class="btn btn-primary">Назад</a>
 {% endif %}

@@ -160,7 +160,7 @@ class ReportController extends Controller
 					);
 				}
 
-				$googledrive->uploadFile(
+				$uploaded = $googledrive->uploadFile(
 					$pathChunkName,
 					$reportFile->getPath(),
 					$reportFile->getMimeType(),
@@ -180,8 +180,17 @@ class ReportController extends Controller
 			}
 		}
 
+		if (! isset($uploaded)) {
+			$uploaded = false;
+		}
+
 		$flash = $this->getService('flash');
-		$flash->addMessage('message', 'Отчет успешно загружен на Ваш GoogleDrive.');
+		if ($uploaded) {
+			$flash->addMessage('message', 'Отчет успешно загружен на Ваш GoogleDrive.');
+			$flash->addMessage('uploaded', $uploaded->webViewLink);
+		} else {
+			$flash->addMessage('error', 'Не удалось загрузить отчет на Ваш GoogleDrive.');
+		}
 
 		return $this->route('report', 
 			compact([

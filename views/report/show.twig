@@ -2,9 +2,18 @@
 
 {% block content %}
 
+	{% if flash.hasMessage('error') %}
+		<div class="alert alert-danger" role="alert">
+			{{ flash.getFirstMessage('error') }}
+		</div>
+	{% endif %}
+
 	{% if flash.hasMessage('message') %}
 		<div class="alert alert-success" role="alert">
 			{{ flash.getFirstMessage('message') }}
+			{% if flash.hasMessage('uploaded') %}
+				<p><a href="{{ flash.getFirstMessage('uploaded') }}" target="_blank">{{ flash.getFirstMessage('uploaded') }}</a></p>
+			{% endif %}
 		</div>
 	{% endif %}
 
