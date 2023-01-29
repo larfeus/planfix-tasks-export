@@ -52,6 +52,10 @@ if (!function_exists('env')) {
     {
         $value = getenv($key);
 
+        if ($value === false && isset($_ENV[$key])) {
+            $value = $_ENV[$key];
+        }
+
         if ($value === false) {
             return $default;
         }
